@@ -1,0 +1,12 @@
+.DS_Store
+
+node_modules/
+uploads/
+log/
+# src/test.js
+.env
+*.sh
+package-lock.json
+.next/*
+*.pem
+yarn.lock
