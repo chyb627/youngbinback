@@ -15,8 +15,14 @@
 - DROP TABLE users;
 - 테이블 삭제 명령어
 
+- SELECT DATABASE();
+- 선택된 데이터베이스 확인.
+
 - SHOW TABLES;
-- 테이블 목록 확인.
+- 테이블 목록 확인. use youngbin; 명령어를 입력했다면 youngbin 테이블일 것.
+
+- describe users;
+- users 테이브의 필드(컬럼)을 확인할 수 있다.
 
 ### 데이터베이스 생성
 
@@ -104,3 +110,19 @@ CREATE TABLE youngbin.comment(                 -- comment 테이블 생성
 ## MYSQL명령어
 
 - SELECT CURDATE();  // 현재 날짜를 반환
+
+## 테이블 설정
+
+```sql
+CREATE TABLE users (                      -- users 테이블 생성
+  email VARCHAR(255) PRIMARY KEY,         -- email 필드 길이는 일반적인 255로 설정. (이메일 길이는 통상적으로 255) 기본키 설정. (같은 이메일로 두번 가입을 방지하기 위해)
+  created_at TIMESTAMP DEFAULT NOW()      -- created_at 필드 생성. TIMESTAMP가 datetime보다 크기가 더 작고, 공간과 메모리를 덜먹고 잘 표시된다. (표현가능시간 : 1970 ~2038),
+);                                        -- 기본값을 NOW로 설정. 새사용자가 가입하면 자동적으로 현재 시간이 적용된다.
+```
+
+- show databases; 데이터베이스 확인하고,
+- use youngbin; 사용할 디비 선택해주고,
+- select database(); 선택 디비 적용되었나 확인해주고,
+- source schema.sql   쿼리문 적용해주고
+- show tables;  테이블 생겼나 확인하고,
+- describe users;  users 테이블의 컬럼 들어갔나 확인.
