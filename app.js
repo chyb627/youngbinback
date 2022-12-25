@@ -2,6 +2,8 @@ const express = require('express');
 const mysql = require('mysql2');
 const app = express();
 
+app.set("view engine", "ejs");
+
 // --------------mysql 설정--------------
 const env = process.env.NODE_ENV || 'development';
 const config = require('./config/config')[env];
@@ -84,7 +86,16 @@ app.get("/", function (req, res) {
   connection.query(q, function (err, results) {
     if (err) throw err;
     const count = results[0].count
-    res.send(`users 테이블에 ${count}명이 등록되어있습니다.`)
+    res.send(`<h1>users 테이블에 ${count}명이 등록되어있습니다.</h1>`)
+  });
+});
+
+app.get('/home', (req, res) => {
+  const q = "SELECT COUNT(*) AS count FROM users";
+  connection.query(q, function (err, results) {
+    if (err) throw err;
+    const count = results[0].count
+    res.render("home", { count });
   });
 });
 
