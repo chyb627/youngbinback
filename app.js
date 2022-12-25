@@ -4,6 +4,13 @@ const app = express();
 
 app.set("view engine", "ejs");
 
+// express 서버로 POST 요청을 할 때 input 태그의 value를 전달하기 위해 사용.
+// 요청의 본문에 있는 데이터를 해석해서 req.body 객체로 만들어주는 미들웨어.
+// 예전에는 body-parser 패키지를 별도로 설치해야 했지만 express v4.16.0 부터 내장 라이브러리가 되었음.
+app.use(express.urlencoded({ extended: false }));
+// JSON 문자열로 넘어오는 경우 express.json() 미들웨어를 사용
+app.use(express.json());
+
 // --------------mysql 설정--------------
 const env = process.env.NODE_ENV || 'development';
 const config = require('./config/config')[env];
@@ -96,6 +103,15 @@ app.get('/home', (req, res) => {
     if (err) throw err;
     const count = results[0].count
     res.render("home", { count });
+  });
+});
+
+app.post('/register', function (req, res) {
+  var person = { email: req.body.email };
+  connection.query('INSERT INTO users SET ?', person, function (err, result) {
+    console.log(err);
+    console.log(result);
+    res.redirect("/");
   });
 });
 
