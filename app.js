@@ -1,4 +1,6 @@
+const express = require('express');
 const mysql = require('mysql2');
+const app = express();
 
 // --------------mysql 설정--------------
 const env = process.env.NODE_ENV || 'development';
@@ -38,8 +40,8 @@ const q = 'SELECT * FROM users';
 
 connection.query(q, function (error, results, fields) {
   if (error) throw error;
-  console.log('The solution is: ', results);
-  console.log(results.length);
+  // console.log('The solution is: ', results);
+  // console.log(results.length);
   // 좋은방법 X, 단순히 개수를 세기 위해 모든 데이터를 선택해서 결과로 출력하기 때문. 효율적이지 않음.
   // SELECT COUNT(*) AS total FROM users를 사용하자.
   // MySQL에 총계를 계산해서 달라고 하면 되지 모든 데이터가 필요한건 X. 만개라고 예를들면, 결과를 모두 회신하는 대신 개수만 세서 알려주는 작업이 효율적이다.
@@ -75,4 +77,17 @@ const q3 = 'INSERT INTO users (email, created_at) VALUES ?';
 //   console.log(result);
 // })
 
-connection.end();
+// connection.end();
+
+app.get("/", function (req, res) {
+  const q = "SELECT COUNT(*) AS count FROM users";
+  connection.query(q, function (err, results) {
+    if (err) throw err;
+    const count = results[0].count
+    res.send(`users 테이블에 ${count}명이 등록되어있습니다.`)
+  });
+});
+
+app.listen(1130, function () {
+  console.log("Server Running on 1130!")
+})
