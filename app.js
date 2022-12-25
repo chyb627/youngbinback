@@ -1,18 +1,11 @@
 const mysql = require('mysql2');
-const dotenv = require('dotenv');
 
-// dotenv는 최대한 위에 올려 주면 좋은게 밑에있으면 process.env.COOKIE_SECRET등이 적용되지 않음
-dotenv.config();
+// --------------mysql 설정--------------
+const env = process.env.NODE_ENV || 'development';
+const config = require('./config/config')[env];
+const connection = mysql.createConnection(config);
 
-// mysql 설정
-const connection = mysql.createConnection({
-  user: "root",
-  host: "127.0.0.1",
-  password: process.env.DB_PASSWORD,
-  database: "youngbin",
-});
-
-// mysql 쿼리문 써보기
+// --------------mysql 쿼리문 써보기--------------
 
 // const q = 'SELECT CURDATE()';
 // const q1 = 'SELECT 1 + 5 As answer';
@@ -40,13 +33,46 @@ const connection = mysql.createConnection({
 //   console.log(' q2now The solution is: ', results[0].now);
 // });
 
+// --------------users 테이블 조회--------------
 const q = 'SELECT * FROM users';
 
-connection.query(q, function(error, results, fields) {
-  if(error) throw error;
+connection.query(q, function (error, results, fields) {
+  if (error) throw error;
   console.log('The solution is: ', results);
-  console.log(results.length); 
+  console.log(results.length);
   // 좋은방법 X, 단순히 개수를 세기 위해 모든 데이터를 선택해서 결과로 출력하기 때문. 효율적이지 않음.
   // SELECT COUNT(*) AS total FROM users를 사용하자.
   // MySQL에 총계를 계산해서 달라고 하면 되지 모든 데이터가 필요한건 X. 만개라고 예를들면, 결과를 모두 회신하는 대신 개수만 세서 알려주는 작업이 효율적이다.
 });
+
+// --------------users 테이블에 email 컬럼에 하드 코딩 하기--------------
+// const q1 = 'INSERT INTO users (email) VALUES ("jungin@gmail.com");'
+
+// connection.query(q1, function(error, results, fields) {
+//   if(error) throw error;
+//   console.log(results); 
+// });
+
+// --------------users 테이블에 email 컬럼에 동적인 코딩 하기--------------
+// MySQL에서 person이란 변수를 보고 객체를 인식한다. 
+// 그 후 'INSERT INTO users (email, name) VALUES ("jungin@gmail.com", "정인");' 으로 변형해준다.
+// const person = { email: 'jungin@gmail.com', name: '정인' };
+// connection.query('INSERT INTO users SET ?', person, function (error, results) {
+//   if (error) throw error;
+//   console.log(results);
+// });
+
+// --------------users 테이블에 컬럼 대량 삽입하기--------------
+const data = [
+  ['dahyun@gamil.com', '1989-11-30 11:51:33'],
+  ['gallak@gamil.com', '1990-12-30 12:51:33'],
+  ['eunbi@gamil.com', '1987-01-02 03:48:33'],
+]
+const q3 = 'INSERT INTO users (email, created_at) VALUES ?';
+
+// connection.query(q3, [data], function (err, result) {
+//   console.log(err);
+//   console.log(result);
+// })
+
+connection.end();

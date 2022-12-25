@@ -126,3 +126,4 @@ CREATE TABLE users (                      -- users 테이블 생성
 - source schema.sql   쿼리문 적용해주고
 - show tables;  테이블 생겼나 확인하고,
 - describe users;  users 테이블의 컬럼 들어갔나 확인.
+- DELETE FROM users; users 테이블의 데이터 모두 삭제.
