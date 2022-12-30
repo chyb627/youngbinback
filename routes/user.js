@@ -19,10 +19,10 @@ router.get("/", (req, res, next) => {
 
 router.post("/signup", async (req, res, next) => {
   try {
-    const q = 'INSERT INTO users (email, name, password) VALUES (?, ?, ?)';
-    const { email, name, password } = req.body;
+    const q = 'INSERT INTO users (email, name, password, birthday) VALUES (?, ?, ?, ?)';
+    const { email, name, password, birthday } = req.body;
     const hashedPassword = await bcrypt.hash(password, 12);
-    const params = [email, name, hashedPassword]
+    const params = [email, name, hashedPassword, birthday];
 
     connection.query(q, params, (err, results) => {
       res.status(201).send('ok');
