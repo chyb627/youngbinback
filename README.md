@@ -1,129 +1,68 @@
 # youngbinback
-영차영차앱 백앤드 node + mysql
 
-## MySQL
+영차영차앱 백앤드 nodejs
 
-- mysql -u root -p
-- MySQL로 이동. -h는 호스트, -u는 사용자, -p는 비밀번호
+### 컴퓨터가 소스 코드를 이해하려면?
 
-- show databases;
-- database 확인
+- 컴퓨터 프로세스는 0과 1만 이해할 수 있기 때문에 우리가 작성한 소스 코드를 머신 코드로 변환해 줘야 한다.
+- 이 변환 과정은 컴파일과 인터프리터를 통해 일어난다.
 
-- DESC users;
-- users란 테이블 확인.
+- Interpreter(인터프리터)
 
-- DROP TABLE users;
-- 테이블 삭제 명령어
+  - 한 줄씩 번역 및 분석
+  - 실행할 때마다 한줄 씩 번역
 
-- SELECT DATABASE();
-- 선택된 데이터베이스 확인.
+- Compiler(컴파일)
 
-- SHOW TABLES;
-- 테이블 목록 확인. use youngbin; 명령어를 입력했다면 youngbin 테이블일 것.
+  - 코드를 한번에 기계어로 변환
 
-- describe users;
-- users 테이브의 필드(컬럼)을 확인할 수 있다.
+- 자바스크립트는 단순한 인터프리터였지만, 최신 엔진은 성능 향상을 위해 Just-In-Time 컴파일을 사용한다.
 
-### 데이터베이스 생성
+- JIT Compiler (Just In Time)
+  - 인터프리터 언어는 컴파일 되는 다른 언어보다 한줄 한줄 해석하고 실행하기 때문에 매우 느리다.
+  - 현재 웹에서도 지도 기능등 Heavy한 기능들도 수행하고 있기에 현재는 더 나은 퍼포먼스를 위해 JIT 컴파일을 이용하고 있다.
 
-- CREATE SCHEMA youngbin DEFAULT CHARACTER SET utf8;
-- :::::: 위와 같이 입력하면 youngbin이라는 스키마가 생김. mysql에서는 SCHEMA 와 database가 같은 단어라고 보면 된다.
-- use youngbin;
-- :::::: youngbin데이터베이스가 생겼다면 use youngbin;를 입력해야 한다.  --> Database changed가된다.
+### Nodejs runtime
 
-### 테이블 생성
+- 런타임이란 프로그래밍 언어가 구동되는 환경을 말한다.
+- 그러기에 Nodejs나 크롬 등의 여러 브라우저들에서 자바스크립트가 구동이 되기에 Nodejs나 브라우저들도 자바스크립트 런타임이다.
+- Nodejs는 프로그래밍 언어도 프레임워크도 아닌 자바스크립트 런타임이다.
 
-```sql
-CREATE TABLE youngbin.users(                    -- users 테이블 생성
-  id INT NOT NULL AUTO_INCREMENT,               -- id 컬럼 생성
-  name VARCHAR(20) NOT NULL,                    -- name 컬럼 생성
-  age INT UNSIGNED NOT NULL,                    -- age 컬럼 생성
-  married TINYINT NOT NULL,                     -- married 컬럼 생성
-  comment TEXT NULL,                            -- comment 컬럼 생성 (자기소개. comment table의 comment와 다름.)
-  created_at DATETIME NOT NULL DEFAULT now(),   -- created_at 컬럼 생성
-  PRIMARY KEY(id),  
-  UNIQUE INDEX name_UNIQUE (name ASC))          -- UNIQUE를 하면 무조건 INDEX를 붙일 수 밖에없음. UNIQUE는 검색을 자주하기 때문.
-  COMMENT = '사용자 정보'                          -- COMMENT는 users테이블에 대한 설명.
-  DEFAULT CHARACTER SET=utf8
-  ENGINE=InnoDB;
-```
+### Nodejs REPL
 
-```sql
-CREATE TABLE youngbin.comment(                 -- comment 테이블 생성
-  id INT NOT NULL AUTO_INCREMENT,              -- id컬럼 생성
-  commenter INT NOT NULL,                      -- commenter컬럼 생성
-  comment VARCHAR(100) NOT NULL,               -- comment 컬럼 생성
-  created_at DATETIME NOT NULL DEFAULT now(),  -- created_at 컬럼 셍상
-  PRIMARY KEY(id),                             -- id를 기본키로 설정, 겹치지않는값으로 설정.
-  INDEX commenter_idx (commenter ASC),         -- 자주 검색할만한 것들을 INDEX 해주면, 검색성능이 향상. commenter 컬럼을 오름차순으로 인덱싱 하겠다는 뜻
-  CONSTRAINT commenter                         -- commenter컬럼에 제약을 두겠다. 
-  FOREIGN KEY (commenter)                      -- 외래키. users테이블의 id로 commenter를 제약을 두는 것. users테이블의 id에서만 commenter가 나올 수 있도록함.
-  REFERENCES youngbinbackend.users (id)        -- 참조. users 테이블의 id 참조.
-  ON DELETE CASCADE                            -- 사용자가 탈퇴할 때 그사람이 단 댓글까지 같이 지울것인가? CASCADE는 같이 지운다는 뜻.
-  ON UPDATE CASCADE)
-  COMMENT = '댓글'                              -- COMMENT는 comment테이블에 대한 설명.
-  DEFAULT CHARSET=utf8mb4                      -- 보통은 utf8로 많이하는데, mb4를 붙이면 이모티콘까지 같이 넣을 수 있도록 함.
-  ENGINE=InnoDB;
-```
+- REPL은 Read-Eval(evaluation)-Print Loop의 약어로 사용자가 특정 코드를 입력하면 그 코드를 평가하고 코드의 실행결과를 출력해주는 것을 반복해주는 환경을 말한다.
+- READ -> EVAL -> PRINT -> READ ..... (LOOP!)
 
-- id, commenter, comment, created_at 4개의 컬럼을 만듦.
-- id는 고유한 숫자이고, INT로 숫자설정, NOT NULL로 필수 설정, 1,2,3,4... 순으로 갈때는 AUTO_INCREMENT를 붙여준다.
-- commenter는 댓글 단 사람의 id
-- comment는 댓글. VARCHAR(100)로 100글자 이하로 설정. NOT NULL로 필수 설정.
-- created_at는 생성일. DATE는 날짜 기록. DATETIME은 날짜에 시간까지 기록. DEFAULT는 기본값. now()로 기본값을 현재시간으로 설정.
+### Browser API & Nodejs API
 
-- INT: 정수 자료형 (FLOAT, DOUBLE은 실수)
-- VARCHAR: 문자열 자료형, 가변 길이(CHAR은 고정 길이)
-- TEXT: 긴 문자열은 TEXT로 별도 저장, 소설, 일기등
-- DATETIME: 날짜 자료형 저장
-- TINYINT: -128에서 127까지 저장하지만 여기서는 1 또는 0만 저장해 불 값 표현.
+- 브라우저와 nodejs 모두에서 사용하는 API
 
-- NOT NULL: 빈 값은 받지 않겠다는 뜻 (NULL은 빈 값 허용)
-- AUTO_INCREMENT: 숫자 자료형인 경우 다음 로우가 저장될 때 자동으로 1 증가.
-- UNSIGNED: 0과 양수만 허용.
-- ZEROFILL: 숫자의 자리 수가 고정된 경우 빈 자리에 0을 넣음. 앞에 0이 붙어야하는 경우 유용함.
-- DEFAULT now(): 날짜 컬럼의 기본값을 현재 시간으로.
+  - 대표적으로 console api
 
-## CRUD
+- 브라우저 API인 window 객체 사용
 
-- CREATE / READ / UPDATE / DELETE
-- 데이터베이스에서 가장 많이하는 작업.
+  - 이 window 객체는 자바스크립트가 아닌 브라우저에서 제공해주는 객체이다.
+  - 그러므로 nodejs REPL 환경에서는 사용할 수 없다.
 
-- INSERT INTO 테이블 (컬럼명들) VALUES (값들);
-- INSERT INTO youngbinbackend.users (name, age, married, comment) VALUES ('cha', 30, 0, '자기소개 내용');
-- INSERT INTO youngbinbackend.comments (commenter, comment) VALUES (1, '댓글 내용');
+- Nodejs API인 Process 객체 사용
+  - 이 process 객체는 자바스크립트가 아닌 nodejs에서 제공해주는 객체이다.
 
-- SELECT * FROM youngbinbackend.users;
+### Module
 
-- SELECT id, name FROM youngbinbackend.users ORDER BY age DESC LIMIT 1;
-- LIMIT으로 조회할 개수 제한을 할 수 있다. 조건을 만족하는 로우가 여러개일 때 처음오는 한개만 보여줄 때 LIMIT 1 사용.
+- Nodejs에서 module은 '필요한 함수들의 집합'을 의미한다.
+- 사용하고자 하는 모든 기능을 다 자신이 처음부터 만들어서 사용할 수 없으므로 이미 만들어진 모듈을 이용하여 사용할 수 있다.
+- 모듈을 가져와 사용할 때는 require 모듈을 이용해서 다른 모듈들을 가져올 수 있다.
+- 모듈의 종류에는 Core Module, Local Module, Third Party Module이 있다.
+- const module = require("modue_name");
+- requre() 함수를 이용해서 자바스크립트 파일을 읽고 그 파일을 실행시켜 객체를 반환한다.
+- 모듈을 가져와서 변수 또는 상수에 할당해서 사용할 수 있다.
 
-- SELECT id, name FROM youngbinbackend.users ORDER BY age DESC LIMIT 1 OFFSET 1;
-- OFFSET 1을 해주면 1등(1번째)를 건너뛰고, 다음것을 1개 출력해주겠다. (여기서 OFFSET2 로 바뀌면 3번째것이 출력)
+- Core Module
 
-- UPDATE 테이블명 SET 컬럼=값 WHERE 조건;
-- UPDATE youngbinbackend.users comment='바꿀 자기소개' WHERE id = 2;
+  - Nodejs에서 기본적으로 제공하는(내제되어 있는)모듈.
+  - http, url, querystring, path, fs, util ...
 
-- DELETE FROM 테이블명 WHERE 조건;
-- DELETE FROM youngbinbackend.users WHERE id = 2;
-
-## MYSQL명령어
-
-- SELECT CURDATE();  // 현재 날짜를 반환
-
-## 테이블 설정
-
-```sql
-CREATE TABLE users (                      -- users 테이블 생성
-  email VARCHAR(255) PRIMARY KEY,         -- email 필드 길이는 일반적인 255로 설정. (이메일 길이는 통상적으로 255) 기본키 설정. (같은 이메일로 두번 가입을 방지하기 위해)
-  created_at TIMESTAMP DEFAULT NOW()      -- created_at 필드 생성. TIMESTAMP가 datetime보다 크기가 더 작고, 공간과 메모리를 덜먹고 잘 표시된다. (표현가능시간 : 1970 ~2038),
-);                                        -- 기본값을 NOW로 설정. 새사용자가 가입하면 자동적으로 현재 시간이 적용된다.
-```
-
-- show databases; 데이터베이스 확인하고,
-- use youngbin; 사용할 디비 선택해주고,
-- select database(); 선택 디비 적용되었나 확인해주고,
-- source schema.sql   쿼리문 적용해주고
-- show tables;  테이블 생겼나 확인하고,
-- describe users;  users 테이블의 컬럼 들어갔나 확인.
-- DELETE FROM users; users 테이블의 데이터 모두 삭제.
+- 모듈의 장점
+  - 재사용할 수 있다.
+  - 관계가 있는 코드끼리 모아 놓아서 코드를 정리할 수 있다.
+  - 관계없는 디테일한 부분은 숨기고 직접 사용되는 코드만 가져와서 보여줄 수 있다.

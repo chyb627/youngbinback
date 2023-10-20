@@ -34,7 +34,7 @@
   "typescript.disableAutomaticTypeAcquisition": true,
   "javascript.validate.enable": true,
   "javascript.preferences.importModuleSpecifier": "relative",
-  "prettier.configPath": ".prettierrc.js",
+  // "prettier.configPath": ".prettierrc.js",
   "editor.formatOnSave": true,
   "typescript.locale": "en",
   "editor.tabSize": 2,
