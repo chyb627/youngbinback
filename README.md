@@ -66,3 +66,89 @@
   - 재사용할 수 있다.
   - 관계가 있는 코드끼리 모아 놓아서 코드를 정리할 수 있다.
   - 관계없는 디테일한 부분은 숨기고 직접 사용되는 코드만 가져와서 보여줄 수 있다.
+
+### HTTP Method
+
+- HTTP 메서드는 수행할 작업의 종류를 나타내기 위해 서버에 보내는 메시지.
+- 브라우저와 서버 간의 더 풍부한 통신이 가능.
+- GET, POST, PUT, DELETE
+- PUT vs PATCH
+  - 공통점은 둘 다 어떠한 데이터를 수정하기 위해서 사용된다.
+  - 차이점은 PUT은 데이터 전체 교체 PATCH는 데이터의 부분 교체이다.
+
+```js
+  /* /user/1 */
+  {
+    "username": "bincha",
+    "email": "bincha@naver.com",
+  }
+
+  /* PUT으로 변경시 모든 필드 사용 */
+  {
+    "username": "bincha",
+    "email": "bincha1@naver.com",  // new email address
+  }
+
+  /* PATCH로 변경시 부분 필드 사용 */
+  {
+    "email": "bincha1@naver.com",  // new email address
+  }
+```
+
+### Stateless Protocol
+
+- 첫 번째 요청에서 클라이언트(브라우저)가 서버에 내가 "user1"이라고 말해도 그 후 서버에게 다시 물어보면 서버는 클라이언트가 누군지 모른다.
+- 그 이유는 HTTP가 Stateless이기 때문이다.
+- Stateless인 이유는 성능 문제 때문이다. 각 요청에 대한 연결을 재설정하는데 소요되는 시간/대역폭을 최소화하기 위한 것.
+
+### res.send() vs res.end()
+
+- res.end가 있고 일단 데이터를 수집하거나 호출자에게 제공하고 싶은 다른 작업을 수행하면 마지막 단계로 세션을 종료해야 한다. 이는 res.end()를 호출하여 수행할 수 있다.
+- res.end()로 종료해야 하는 때
+  - 데이터를 제공하지 않고 응답을 종료하려면 res.end()를 사용할 수 있다. 이것은 404페이지에 유용할 수 있다.
+  - res.status(404).end();
+- res.end()로 종료하지 않아도 되는 때
+  - 데이터를 res.json()이나 res.send()로 보내면 알아서 종료한다.
+
+### MVC Pattern
+
+- Model, View, Controller
+- Model
+  - 앱이 포함해야 할 데이터가 무엇인지 정의함.
+  - 데이터의 상태가 변경되면 모델을 뷰에게 알려줌.
+- View
+  - 뷰는 앱의 데이터를 보여주는 방식을 정의
+- Controller
+  - 앱의 사용자로부터의 입력에 대한 응답으로 모델 및 뷰를 업데이트하는 로직을 포함.
+
+### RESTful API
+
+- 두 컴퓨터 시스템이 인터넷을 통해 정보를 안전하게 교환하기 위해 사용하는 인터페이스.
+
+### Docker
+
+```js
+/* 컨테이너 올리기 */
+docker-compose up
+
+/* 컨테이너 확인 */
+docker ps --all  //CONTAINER ID 확인 --> d1cc969208e1
+
+/* 로컬호스트에서 DB에 psql로 바로접속. 다른 클라이언트 툴을 이용해 접속하는 것도 가능 */
+psql -U postgres -h localhost -p 5433
+
+/* 실행중인 도커 컨테이너에서 프로세스 실행. 셀을 실행해서 인터렉티브한 환경에서 컨테이너 환경을 탐색하는 것도 가능 */
+// docker exec -it <CONTAINER_ID> <COMMAND>
+// docker exec -it <CONTAINER_ID> psql -U postgres
+docker exec -it 581f9c6915c4 psql -U postgres
+
+/* 컨테이너 내리기 */
+docker-compose down
+```
+
+### TypeORM 마이그레이션
+
+```bash
+$ npm run typeorm migration:generate src/migration/Init
+$ npm run typeorm migration:run
+```
