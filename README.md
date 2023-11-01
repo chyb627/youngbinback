@@ -149,6 +149,9 @@ docker-compose down
 ### TypeORM 마이그레이션
 
 ```bash
+# src/migration 폴더를 생성하고, 기존의 테이블이 없는 상태에서 진행.
 $ npm run typeorm migration:generate src/migration/Init
+
+# 생성된 migration init 파일을 실행시켜 테이블 생성.
 $ npm run typeorm migration:run
 ```

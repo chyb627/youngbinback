@@ -10,11 +10,11 @@ export default class Vote extends BaseEntity {
   value: number;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
+  @JoinColumn({ name: 'email', referencedColumnName: 'email' })
   user: User;
 
   @Column()
-  username: string;
+  email: string;
 
   @Column({ nullable: true })
   postId: number;

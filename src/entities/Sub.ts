@@ -23,10 +23,10 @@ export default class Sub extends BaseEntity {
   bannerUrn: string;
 
   @Column()
-  username: string;
+  email: string;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
+  @JoinColumn({ name: 'email', referencedColumnName: 'email' })
   user: User;
 
   @OneToMany(() => Post, (post) => post.sub)

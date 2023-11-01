@@ -27,10 +27,10 @@ export default class Post extends BaseEntity {
   subName: string;
 
   @Column()
-  username: string;
+  email: string;
 
   @ManyToOne(() => User, (user) => user.posts)
-  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
+  @JoinColumn({ name: 'email', referencedColumnName: 'email' })
   user: User;
 
   @ManyToOne(() => Sub, (sub) => sub.posts)
@@ -60,7 +60,7 @@ export default class Post extends BaseEntity {
   protected userVote: number;
 
   setUserVote(user: User) {
-    const index = this.votes?.findIndex((v) => v.username === user.username);
+    const index = this.votes?.findIndex((v) => v.email === user.email);
     this.userVote = index > -1 ? this.votes[index].value : 0;
   }
 

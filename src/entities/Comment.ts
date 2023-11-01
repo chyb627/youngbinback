@@ -3,8 +3,8 @@ import { BeforeInsert, Column, Entity, Index, JoinColumn, ManyToOne, OneToMany }
 import { makeId } from '../utils/helpers';
 import BaseEntity from './Entity';
 import Post from './Post';
-import { User } from './User';
 import Vote from './Vote';
+import { User } from './User';
 
 @Entity('comments')
 export default class Comment extends BaseEntity {
@@ -16,10 +16,10 @@ export default class Comment extends BaseEntity {
   body: string;
 
   @Column()
-  username: string;
+  email: string;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
+  @JoinColumn({ name: 'email', referencedColumnName: 'email' })
   user: User;
 
   @Column()
@@ -35,7 +35,7 @@ export default class Comment extends BaseEntity {
   protected userVote: number;
 
   setUserVote(user: User) {
-    const index = this.votes?.findIndex((v) => v.username === user.username);
+    const index = this.votes?.findIndex((v) => v.email === user.email);
     this.userVote = index > -1 ? this.votes[index].value : 0;
   }
 
