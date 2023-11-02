@@ -1,9 +1,11 @@
-import { User } from '@/entities/User';
 import { Validator, isEmpty, validate } from 'class-validator';
 import { Request, Response, Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { User } from '@/entities/User';
+import userMiddleware from '@/middlewares/user';
+import authMiddleware from '@/middlewares/auth';
 
 dotenv.config();
 const mapError = (errors: Object[]) => {
@@ -12,6 +14,10 @@ const mapError = (errors: Object[]) => {
 
     return prev;
   }, {});
+};
+
+const me = async (req: Request, res: Response) => {
+  return res.json(res.locals.user);
 };
 
 const register = async (req: Request, res: Response) => {
@@ -97,6 +103,7 @@ const login = async (req: Request, res: Response) => {
 
 const router = Router();
 
+router.get('/me', userMiddleware, authMiddleware, me);
 router.post('/register', register);
 router.post('/login', login);
 
