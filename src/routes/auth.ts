@@ -101,10 +101,16 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
+const logout = async (_: Request, res: Response) => {
+  res.clearCookie('token', { httpOnly: true, sameSite: 'strict' });
+  res.status(200).json({ success: true });
+};
+
 const router = Router();
 
 router.get('/me', userMiddleware, authMiddleware, me);
 router.post('/register', register);
 router.post('/login', login);
+router.post('/logout', userMiddleware, authMiddleware, logout);
 
 export default router;
