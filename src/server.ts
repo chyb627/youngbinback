@@ -22,6 +22,8 @@ app.get('/', (_, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/subs', subRoutes);
 
+app.use(express.static('public'));
+
 const PORT = 8000;
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
