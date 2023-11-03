@@ -5,3 +5,5 @@ build/
 tmp/
 temp/
 dist
+packge-lock.json
+.DS_Store
