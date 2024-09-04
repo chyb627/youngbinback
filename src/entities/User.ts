@@ -32,3 +32,10 @@ export class User extends BaseEntity {
     this.password = await bcrypt.hash(this.password, 6);
   }
 }
+
+/*
+@Entity() 데코레이터 클래스는 User 클래스가 엔티티임을 나타내는 데 사용된다. CREATE TABLE user 부분.
+@IsEmail, @Length 는 유효성 체크
+@Column 데코레이터 클래스는 User 엔티티의 email 및 username과 같은 다른 열을 나타내는 데 사용된다.
+@Index() 데코레이터 클래스는 데이터베이스 인덱스를 생성한다. 엔터티 속성 또는 엔터티에 사용할 수 있다.
+*/

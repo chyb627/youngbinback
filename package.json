@@ -4,7 +4,7 @@
    "description": "영차영차앱 백앤드 nodejs",
    "main": "index.ts",
    "scripts": {
-      "start": "ts-node src/index.ts",
+      "start": "ts-node src/server.ts",
       "dev": "nodemon --exec ts-node ./src/server.ts",
       "format": "prettier --write \"src/**/*.{ts,tsx}\"",
       "test:typescript": "tsc",
